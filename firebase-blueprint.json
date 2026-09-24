@@ -1,0 +1,485 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Authenticated user profile and enterprise authorization role",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string" },
+        "title": { "type": "string" },
+        "clearance": { "type": "string" },
+        "badgeId": { "type": "string" },
+        "avatar": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "lastLoginAt": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "workspaceId"]
+    },
+    "Workspace": {
+      "title": "Workspace",
+      "description": "Tenant partition isolating industrial plants and machinery data",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "industry": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "isDemo": { "type": "boolean" }
+      },
+      "required": ["id", "userId", "name"]
+    },
+    "Plant": {
+      "title": "Plant",
+      "description": "Industrial production facility entity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "code": { "type": "string" },
+        "name": { "type": "string" },
+        "location": { "type": "string" },
+        "country": { "type": "string" },
+        "industry": { "type": "string" },
+        "operationalStatus": { "type": "string" },
+        "unitsCount": { "type": "number" },
+        "activeLoadMW": { "type": "number" },
+        "targetLoadMW": { "type": "number" },
+        "overallOEE": { "type": "number" },
+        "status": { "type": "string" },
+        "telemetryStreamStatus": { "type": "string" },
+        "ambientTempC": { "type": "number" },
+        "lastSyncTimestamp": { "type": "string" }
+      },
+      "required": ["id", "workspaceId", "name", "status"]
+    },
+    "ProductionLine": {
+      "title": "ProductionLine",
+      "description": "Continuous or discrete production train inside an industrial facility",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "plantId": { "type": "string" },
+        "name": { "type": "string" },
+        "lineCode": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string" },
+        "throughputUnitsPerHour": { "type": "number" },
+        "targetThroughput": { "type": "number" },
+        "activeMachinesCount": { "type": "number" }
+      },
+      "required": ["id", "workspaceId", "plantId", "name"]
+    },
+    "Machine": {
+      "title": "Machine",
+      "description": "Rotating industrial machinery asset with live telemetry and diagnostics",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "plantId": { "type": "string" },
+        "productionLineId": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "tag": { "type": "string" },
+        "productionLine": { "type": "string" },
+        "plantArea": { "type": "string" },
+        "location": { "type": "string" },
+        "manufacturer": { "type": "string" },
+        "risk": { "type": "string" },
+        "criticality": { "type": "string" },
+        "healthScore": { "type": "number" },
+        "status": { "type": "string" },
+        "operatingLoadPct": { "type": "number" },
+        "energyKW": { "type": "number" },
+        "alarm": { "type": "string" },
+        "novaInsight": { "type": "string" },
+        "rulDays": { "type": "number" },
+        "mtbfHours": { "type": "number" }
+      },
+      "required": ["id", "workspaceId", "plantId", "name", "tag", "status", "healthScore"]
+    },
+    "Sensor": {
+      "title": "Sensor",
+      "description": "SCADA sensor monitoring vibration, temperature, pressure, or harmonics",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "machineId": { "type": "string" },
+        "plantId": { "type": "string" },
+        "channelName": { "type": "string" },
+        "scadaTag": { "type": "string" },
+        "measurementType": { "type": "string" },
+        "unit": { "type": "string" },
+        "currentValue": { "type": "number" },
+        "warningLimit": { "type": "number" },
+        "criticalLimit": { "type": "number" },
+        "samplingRateHz": { "type": "number" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "workspaceId", "machineId", "scadaTag", "measurementType"]
+    },
+    "Telemetry": {
+      "title": "Telemetry",
+      "description": "Historical time-series telemetry data point",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "machineId": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "vibrationRMS": { "type": "number" },
+        "bearingTemp": { "type": "number" },
+        "suctionPressure": { "type": "number" },
+        "dischargePressure": { "type": "number" },
+        "rotorRPM": { "type": "number" },
+        "lubeOilNAS": { "type": "number" },
+        "acousticDB": { "type": "number" },
+        "motorCurrent": { "type": "number" },
+        "energyKW": { "type": "number" },
+        "operatingLoadPct": { "type": "number" }
+      },
+      "required": ["id", "workspaceId", "machineId", "timestamp"]
+    },
+    "Threshold": {
+      "title": "Threshold",
+      "description": "Configured vibration, temperature, and pressure operating envelopes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "machineId": { "type": "string" },
+        "tempWarning": { "type": "number" },
+        "tempCritical": { "type": "number" },
+        "vibWarning": { "type": "number" },
+        "vibCritical": { "type": "number" },
+        "pressWarning": { "type": "number" },
+        "pressCritical": { "type": "number" },
+        "rpmLimit": { "type": "number" },
+        "energyThreshold": { "type": "number" }
+      },
+      "required": ["id", "workspaceId", "machineId"]
+    },
+    "MachineHealth": {
+      "title": "MachineHealth",
+      "description": "Multi-dimensional asset reliability and degradation scoring",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "machineId": { "type": "string" },
+        "overallScore": { "type": "number" },
+        "mechanicalHealth": { "type": "number" },
+        "electricalHealth": { "type": "number" },
+        "thermalHealth": { "type": "number" },
+        "lubricationHealth": { "type": "number" },
+        "rulDays": { "type": "number" },
+        "calculatedAt": { "type": "string" }
+      },
+      "required": ["id", "workspaceId", "machineId", "overallScore"]
+    },
+    "MachineRisk": {
+      "title": "MachineRisk",
+      "description": "Asset failure probability and financial business consequence rating",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "machineId": { "type": "string" },
+        "riskCategory": { "type": "string" },
+        "failureProbabilityPct": { "type": "number" },
+        "consequenceRating": { "type": "number" },
+        "financialExposurePerHourUSD": { "type": "number" },
+        "primaryRiskDriver": { "type": "string" },
+        "evaluatedAt": { "type": "string" }
+      },
+      "required": ["id", "workspaceId", "machineId", "riskCategory"]
+    },
+    "Anomaly": {
+      "title": "Anomaly",
+      "description": "Detected multi-signal SCADA anomaly event",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "machineId": { "type": "string" },
+        "plantId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "severity": { "type": "string" },
+        "status": { "type": "string" },
+        "detectedMetric": { "type": "string" },
+        "observedValue": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "workspaceId", "machineId", "title", "severity"]
+    },
+    "Incident": {
+      "title": "Incident",
+      "description": "Asset trip or excursion incident record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "machineId": { "type": "string" },
+        "plantId": { "type": "string" },
+        "incidentNumber": { "type": "string" },
+        "title": { "type": "string" },
+        "severity": { "type": "string" },
+        "status": { "type": "string" },
+        "summary": { "type": "string" },
+        "reportedBy": { "type": "string" },
+        "assignedEngineer": { "type": "string" },
+        "openedAt": { "type": "string" },
+        "resolvedAt": { "type": "string" }
+      },
+      "required": ["id", "workspaceId", "machineId", "incidentNumber", "title", "severity"]
+    },
+    "Maintenance": {
+      "title": "Maintenance",
+      "description": "Preventative and corrective maintenance work order",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "machineId": { "type": "string" },
+        "workOrderNumber": { "type": "string" },
+        "type": { "type": "string" },
+        "status": { "type": "string" },
+        "priority": { "type": "string" },
+        "dueDate": { "type": "string" },
+        "technician": { "type": "string" },
+        "description": { "type": "string" },
+        "estimatedHours": { "type": "number" }
+      },
+      "required": ["id", "workspaceId", "machineId", "workOrderNumber", "type", "status"]
+    },
+    "Investigation": {
+      "title": "Investigation",
+      "description": "Root-cause failure analysis (RCA) dossier with 5-Whys and CAPA",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "userId": { "type": "string" },
+        "incidentId": { "type": "string" },
+        "plantId": { "type": "string" },
+        "title": { "type": "string" },
+        "assetId": { "type": "string" },
+        "assetName": { "type": "string" },
+        "tag": { "type": "string" },
+        "severity": { "type": "string" },
+        "status": { "type": "string" },
+        "currentStep": { "type": "number" },
+        "timestamp": { "type": "string" },
+        "summary": { "type": "string" },
+        "confidence": { "type": "number" }
+      },
+      "required": ["id", "workspaceId", "assetId", "title", "status"]
+    },
+    "InvestigationNote": {
+      "title": "InvestigationNote",
+      "description": "Collaborative investigator notes attached to an RCA session",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "investigationId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "note": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "investigationId", "note"]
+    },
+    "Recommendation": {
+      "title": "Recommendation",
+      "description": "Prescriptive engineering action proposed by NOVA diagnostics",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "machineId": { "type": "string" },
+        "title": { "type": "string" },
+        "action": { "type": "string" },
+        "urgency": { "type": "string" },
+        "expectedImpact": { "type": "string" },
+        "confidencePct": { "type": "number" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "workspaceId", "machineId", "title", "status"]
+    },
+    "Report": {
+      "title": "Report",
+      "description": "Asset integrity dossier and regulatory compliance report",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "reportNumber": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "typeLabel": { "type": "string" },
+        "plantId": { "type": "string" },
+        "machineId": { "type": "string" },
+        "createdDate": { "type": "string" },
+        "version": { "type": "number" },
+        "status": { "type": "string" },
+        "generatedBy": { "type": "string" },
+        "summary": { "type": "string" }
+      },
+      "required": ["id", "workspaceId", "reportNumber", "name", "status"]
+    },
+    "ReportVersion": {
+      "title": "ReportVersion",
+      "description": "Versioned revision snapshot of an engineering dossier",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "reportId": { "type": "string" },
+        "versionNumber": { "type": "number" },
+        "date": { "type": "string" },
+        "author": { "type": "string" },
+        "summary": { "type": "string" }
+      },
+      "required": ["id", "reportId", "versionNumber"]
+    },
+    "NovaConversation": {
+      "title": "NovaConversation",
+      "description": "NOVA industrial copilot conversation thread",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "plantId": { "type": "string" },
+        "title": { "type": "string" },
+        "selectedMachineId": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "workspaceId", "title"]
+    },
+    "NovaMessage": {
+      "title": "NovaMessage",
+      "description": "User or AI response message in NOVA dialogue",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "conversationId": { "type": "string" },
+        "userId": { "type": "string" },
+        "role": { "type": "string" },
+        "content": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "conversationId", "role", "content"]
+    },
+    "SavedView": {
+      "title": "SavedView",
+      "description": "User custom filtered view of industrial fleet",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "workspaceId", "userId", "name"]
+    },
+    "DashboardConfig": {
+      "title": "DashboardConfig",
+      "description": "User personalized KPI widgets and time ranges",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "userId": { "type": "string" },
+        "defaultTimeRange": { "type": "string" },
+        "defaultPlantId": { "type": "string" }
+      },
+      "required": ["id", "workspaceId", "userId"]
+    },
+    "AlertPreference": {
+      "title": "AlertPreference",
+      "description": "User telemetry alarm notification threshold flags",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "userId": { "type": "string" },
+        "temperature": { "type": "boolean" },
+        "vibration": { "type": "boolean" },
+        "pressure": { "type": "boolean" },
+        "critical": { "type": "boolean" }
+      },
+      "required": ["id", "workspaceId", "userId"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Real-time industrial alert dispatched to user",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "userId": { "type": "string" },
+        "type": { "type": "string" },
+        "severity": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "isRead": { "type": "boolean" }
+      },
+      "required": ["id", "workspaceId", "title", "message"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Audit trail log of user engineering actions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "userId": { "type": "string" },
+        "action": { "type": "string" },
+        "date": { "type": "string" },
+        "relatedObjectType": { "type": "string" },
+        "relatedObjectId": { "type": "string" }
+      },
+      "required": ["id", "workspaceId", "action", "date"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": { "schema": "User", "description": "Enterprise user accounts" },
+    "/workspaces/{workspaceId}": { "schema": "Workspace", "description": "Tenant facilities partition" },
+    "/plants/{plantId}": { "schema": "Plant", "description": "Industrial production facilities" },
+    "/productionLines/{lineId}": { "schema": "ProductionLine", "description": "Production trains" },
+    "/machines/{machineId}": { "schema": "Machine", "description": "150+ rotating equipment fleet" },
+    "/sensors/{sensorId}": { "schema": "Sensor", "description": "SCADA sensor channels" },
+    "/telemetry/{telemetryId}": { "schema": "Telemetry", "description": "Hourly telemetry points" },
+    "/thresholds/{thresholdId}": { "schema": "Threshold", "description": "Operating envelopes" },
+    "/machineHealth/{healthId}": { "schema": "MachineHealth", "description": "Health scores" },
+    "/machineRisk/{riskId}": { "schema": "MachineRisk", "description": "Risk matrix scores" },
+    "/anomalies/{anomalyId}": { "schema": "Anomaly", "description": "Detected anomalies" },
+    "/incidents/{incidentId}": { "schema": "Incident", "description": "Operational incidents" },
+    "/maintenance/{maintenanceId}": { "schema": "Maintenance", "description": "Work orders" },
+    "/investigations/{investigationId}": { "schema": "Investigation", "description": "RCA investigation dossiers" },
+    "/investigationNotes/{noteId}": { "schema": "InvestigationNote", "description": "RCA collaboration notes" },
+    "/recommendations/{recommendationId}": { "schema": "Recommendation", "description": "NOVA prescriptive actions" },
+    "/reports/{reportId}": { "schema": "Report", "description": "Asset integrity dossiers" },
+    "/reportVersions/{versionId}": { "schema": "ReportVersion", "description": "Report revision versions" },
+    "/novaConversations/{conversationId}": { "schema": "NovaConversation", "description": "NOVA consultation threads" },
+    "/novaMessages/{messageId}": { "schema": "NovaMessage", "description": "NOVA assistant dialogue" },
+    "/savedViews/{viewId}": { "schema": "SavedView", "description": "User saved filtered views" },
+    "/dashboardConfigurations/{configId}": { "schema": "DashboardConfig", "description": "User dashboard configurations" },
+    "/alertPreferences/{prefId}": { "schema": "AlertPreference", "description": "Alert notification settings" },
+    "/notifications/{notificationId}": { "schema": "Notification", "description": "User notifications" },
+    "/activityLogs/{logId}": { "schema": "ActivityLog", "description": "User audit activity logs" }
+  }
+}

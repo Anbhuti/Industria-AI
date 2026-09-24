@@ -1,0 +1,7 @@
+{
+  "name": "INDUSTRIX AI",
+  "description": "Enterprise industrial intelligence platform for predictive maintenance, root-cause investigation, machine health, and operational risk.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

@@ -1,0 +1,162 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDemoResource(rsc) {
+      return rsc.data.workspaceId == 'ws-demo-industrial' || rsc.data.isDemo == true;
+    }
+
+    function belongsToWorkspace(rsc) {
+      return isAuthenticated() && (
+        rsc.data.workspaceId == request.auth.token.workspaceId ||
+        isDemoResource(rsc)
+      );
+    }
+
+    // Users
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId);
+    }
+
+    // Workspaces
+    match /workspaces/{workspaceId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // Plants
+    match /plants/{plantId} {
+      allow read: if isAuthenticated() || isDemoResource(resource);
+      allow write: if isAuthenticated();
+    }
+
+    // Production Lines
+    match /productionLines/{lineId} {
+      allow read: if isAuthenticated() || isDemoResource(resource);
+      allow write: if isAuthenticated();
+    }
+
+    // Machinery Fleet
+    match /machines/{machineId} {
+      allow read: if isAuthenticated() || isDemoResource(resource);
+      allow write: if isAuthenticated();
+    }
+
+    // Sensors
+    match /sensors/{sensorId} {
+      allow read: if isAuthenticated() || isDemoResource(resource);
+      allow write: if isAuthenticated();
+    }
+
+    // Telemetry Time-Series
+    match /telemetry/{telemetryId} {
+      allow read: if isAuthenticated() || isDemoResource(resource);
+      allow write: if isAuthenticated();
+    }
+
+    // Thresholds
+    match /thresholds/{thresholdId} {
+      allow read: if isAuthenticated() || isDemoResource(resource);
+      allow write: if isAuthenticated();
+    }
+
+    // Machine Health & Risk
+    match /machineHealth/{healthId} {
+      allow read: if isAuthenticated() || isDemoResource(resource);
+      allow write: if isAuthenticated();
+    }
+
+    match /machineRisk/{riskId} {
+      allow read: if isAuthenticated() || isDemoResource(resource);
+      allow write: if isAuthenticated();
+    }
+
+    // Anomalies & Incidents
+    match /anomalies/{anomalyId} {
+      allow read: if isAuthenticated() || isDemoResource(resource);
+      allow write: if isAuthenticated();
+    }
+
+    match /incidents/{incidentId} {
+      allow read: if isAuthenticated() || isDemoResource(resource);
+      allow write: if isAuthenticated();
+    }
+
+    // Maintenance Work Orders
+    match /maintenance/{maintenanceId} {
+      allow read: if isAuthenticated() || isDemoResource(resource);
+      allow write: if isAuthenticated();
+    }
+
+    // RCA Investigations & Collaboration Notes
+    match /investigations/{investigationId} {
+      allow read: if isAuthenticated() || isDemoResource(resource);
+      allow write: if isAuthenticated();
+    }
+
+    match /investigationNotes/{noteId} {
+      allow read: if isAuthenticated() || isDemoResource(resource);
+      allow write: if isAuthenticated();
+    }
+
+    // Prescriptive Recommendations
+    match /recommendations/{recommendationId} {
+      allow read: if isAuthenticated() || isDemoResource(resource);
+      allow write: if isAuthenticated();
+    }
+
+    // Reports & Version Snapshots
+    match /reports/{reportId} {
+      allow read: if isAuthenticated() || isDemoResource(resource);
+      allow write: if isAuthenticated();
+    }
+
+    match /reportVersions/{versionId} {
+      allow read: if isAuthenticated() || isDemoResource(resource);
+      allow write: if isAuthenticated();
+    }
+
+    // NOVA Conversations & Dialogue History
+    match /novaConversations/{conversationId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || resource.data.workspaceId == 'ws-demo-industrial');
+      allow write: if isAuthenticated();
+    }
+
+    match /novaMessages/{messageId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Personalized Settings & Logs
+    match /savedViews/{viewId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /dashboardConfigurations/{configId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /alertPreferences/{prefId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /notifications/{notificationId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /activityLogs/{logId} {
+      allow read: if isAuthenticated() || isDemoResource(resource);
+      allow write: if isAuthenticated();
+    }
+  }
+}
